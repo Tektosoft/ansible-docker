@@ -8,9 +8,8 @@ stages:
   tags:
     - docker
   services: ["docker:dind"]
-  before_script:
-    - echo -n $DOCKER_PASSWORD | docker login -u tektosoft --password-stdin
   script:
+    - echo -n $DOCKER_PASSWORD | docker login -u tektosoft --password-stdin
     - docker build -t tektosoft/ansible:$IMAGE_TAG -f Dockerfile .
   after_script:
     - docker push tektosoft/ansible
@@ -22,5 +21,5 @@ build latest:
 
 build fixed version:
   extends: .build_docker_image
-  variables:
-    IMAGE_TAG: $(ansible --version | head -n 1 | awk -F " " '{print $2}')
+  before_script:
+    - export IMAGE_TAG=$(ansible --version | head -n 1 | awk -F " " '{print $2}')

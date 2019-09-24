@@ -1,12 +1,12 @@
 image: docker:latest
 
-variables:
-    IMAGE_TAG: latest
+before_script:
+  - export ANSIBLE_VERSION=$(ansible --version | head -n 1 | awk -F " " '{print $2}')
 
 stages:
   - build
 
-build docker image:
+.build_docker_image:
   stage: build
   tags:
     - docker
@@ -17,3 +17,13 @@ build docker image:
     - docker build -t tektosoft/ansible:$IMAGE_TAG -f Dockerfile .
   after_script:
     - docker push tektosoft/ansible
+
+build:latest:
+  extends: .build_docker_image
+  variables:
+    IMAGE_TAG: latest
+
+build:fixversion:
+  extends: .build_docker_image
+  variables:
+    IMAGE_TAG: $ANSIBLE_VERSION

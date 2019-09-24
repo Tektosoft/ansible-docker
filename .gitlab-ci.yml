@@ -22,4 +22,4 @@ build latest:
 build fixed version:
   extends: .build_docker_image
   before_script:
-    - export IMAGE_TAG=$(ansible --version | head -n 1 | awk -F " " '{print $2}')
+    - export IMAGE_TAG=$(wget -q -O - http://ppa.launchpad.net/ansible/ansible/ubuntu/dists/bionic/main/source/Sources.gz | gunzip |head -n 3|tail -1|awk -F " |-" '{print $2}')

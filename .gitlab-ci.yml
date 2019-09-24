@@ -1,0 +1,19 @@
+image: docker:latest
+
+variables:
+    IMAGE_TAG: latest
+
+stages:
+  - build
+
+build docker image:
+  stage: build
+  tags:
+    - docker
+  services: ["docker:dind"]
+  before_script:
+    - echo -n $DOCKER_PASSWORD | docker login -u tektosoft --password-stdin
+  script:
+    - docker build -t tektosoft/ansible:$IMAGE_TAG -f Dockerfile .
+  after_script:
+    - docker push tektosoft/ansible

@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
-    - name: Login to GitHub Docker registry
+    - name: Login to Docker Hub
       env:
         REGISTRY_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
       run: echo -n $REGISTRY_PASSWORD | docker login -u tektosoft --password-stdin

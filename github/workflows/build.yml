@@ -1,0 +1,24 @@
+name: Build and deploy to Docker Hub
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_latest:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Login to GitHub Docker registry
+      env:
+        REGISTRY_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      run: echo -n $REGISTRY_PASSWORD | docker login -u tektosoft --password-stdin
+    - name: Build image
+      run: |
+        export VERSION=$(wget -q -O - http://ppa.launchpad.net/ansible/ansible/ubuntu/dists/bionic/main/source/Sources.gz | gunzip |head -n 3|tail -1|awk -F " |-" '{print $2}')
+        docker build -t tektosoft/ansible:latest \
+        -t tektosoft/ansible:$VERSION .
+    - name: Push image
+      run: docker push tektosoft/ansible

@@ -2,7 +2,7 @@ ARG UBUNTU_VERSION_ARG=20.04
 FROM ubuntu:${UBUNTU_VERSION_ARG} AS ansible
 LABEL maintainer="Ivan Krasnuhin <i.krasnuhin@beauit.com>"
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3-pip ansible sshpass openssh-client \
+    && apt-get install -y --no-install-recommends python3-pip ansible sshpass openssh-client rsync \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN pip3 install --upgrade pycrypto pywinrm
